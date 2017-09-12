@@ -17,7 +17,7 @@ namespace PruebaLogin.DAO
             using (var connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario";
+                string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario";
                 using (var command = new SqlCommand(sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -44,7 +44,7 @@ namespace PruebaLogin.DAO
             using (var connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario";
+                string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
@@ -85,7 +85,7 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario where ID=@ID";
+                string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
@@ -125,7 +125,7 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario where ID=@ID";
+                string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
