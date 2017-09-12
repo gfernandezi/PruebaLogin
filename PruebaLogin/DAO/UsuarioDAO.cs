@@ -17,7 +17,7 @@ namespace PruebaLogin.DAO
             using (var connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select * from Usuario";
+                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario";
                 using (var command = new SqlCommand(sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -44,7 +44,7 @@ namespace PruebaLogin.DAO
             using (var connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select * from Usuario  where ID = @ID";
+                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
@@ -67,11 +67,11 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Insert into Usuario(Usuario, Password) values (@Usuario, @Password)";
+                string sql = "Insert into Usuario(Usuario, Password, [PasswordHash]) values (@Usuario, @Password, EncryptByPassPhrase('RS', @PasswordHash))";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
-                //oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
+                oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
 
                 oCmd.ExecuteNonQuery();
                 connection.Close();
@@ -85,7 +85,7 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select * from Usuario where ID=@ID";
+                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario where ID=@ID";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
@@ -94,7 +94,7 @@ namespace PruebaLogin.DAO
                     {
                         usuarioDTO.ID = Convert.ToInt32(reader["ID"]);
                         usuarioDTO.Usuario = reader["Usuario"].ToString();
-                        //usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
+                        usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
                         usuarioDTO.Password = reader["Password"].ToString();
                     }
                     connection.Close();
@@ -108,12 +108,12 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Update Usuario set Usuario = @Usuario, Password = @Password where ID = @ID ";
+                string sql = "Update Usuario set Usuario = @Usuario, Password = @Password, [PasswordHash] = EncryptByPassPhrase('RS', @PasswordHash) where ID = @ID ";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
-                //oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
+                oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
                 oCmd.ExecuteNonQuery();
                 connection.Close();
             }
@@ -125,7 +125,7 @@ namespace PruebaLogin.DAO
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
-                string sql = "Select * from Usuario where ID=@ID";
+                string sql = "Select ID, Usuario, Password, DECRYPTBYPASSPHRASE('RS',PasswordHash) as PasswordHash  from Usuario where ID=@ID";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())

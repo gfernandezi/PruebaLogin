@@ -22,7 +22,7 @@ namespace PruebaLogin.Controllers.Usuario
                 usuariosDTO = usuarioDAO.Get();
                 return View(usuariosDTO);
             }
-            catch
+            catch (Exception e)
             {
                 return View();
             }
@@ -57,7 +57,7 @@ namespace PruebaLogin.Controllers.Usuario
                 usuarioDAO.Create(usuarioDTO);
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception e)
             {
                 return View();
             }
@@ -82,7 +82,7 @@ namespace PruebaLogin.Controllers.Usuario
                 usuarioDAO.Edit(ID, usuarioDTO);
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception e)
             {
                 return View();
             }
@@ -109,7 +109,7 @@ namespace PruebaLogin.Controllers.Usuario
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception e)
             {
                 return View();
             }

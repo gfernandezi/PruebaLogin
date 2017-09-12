@@ -7,7 +7,7 @@ using System.Web;
 
 namespace PruebaLogin.Data.Repositorios
 {
-    public class RepositorioDeUsuario : Repositorio<UsuarioDTO>, IRepositorioDeUsuarios
+    public class RepositorioDeUsuario //: Repositorio<UsuarioDTO>, IRepositorioDeUsuarios
     {
         public void AccionEspecificaDeUsuarios(UsuarioDTO usuarioDTO)
         {
