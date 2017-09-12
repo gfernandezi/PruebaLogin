@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PruebaLogin.Models.DTO.UsuarioDTO>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Usuario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PasswordHash)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Usuario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PasswordHash)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { ID=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { ID=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { ID=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
