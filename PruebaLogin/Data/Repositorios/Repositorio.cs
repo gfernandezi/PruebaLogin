@@ -27,7 +27,7 @@ namespace PruebaLogin.Data.Repositorios
             {
                 entidad.FechaCreacion = DateTime.Now;
                 db.Entry(entidad).State = System.Data.Entity.EntityState.Added;
-                db.SaveChanges();
+                db.SaveChanges(); 
             }
         }
 
