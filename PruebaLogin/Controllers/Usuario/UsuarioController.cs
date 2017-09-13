@@ -19,7 +19,7 @@ namespace PruebaLogin.Controllers.Usuario
             try
             {
                 usuarioDAO = new UsuarioDAO();
-                usuariosDTO = usuarioDAO.Get();
+                usuariosDTO = usuarioDAO.GetAll();
                 return View(usuariosDTO);
             }
             catch (Exception e)

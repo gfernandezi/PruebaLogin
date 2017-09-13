@@ -11,7 +11,7 @@ namespace PruebaLogin.DAO
         string conectionString = ConfigurationManager.ConnectionStrings["DBCuenta"].ConnectionString;
         UsuarioDTO usuarioDTO;
         List<UsuarioDTO> usuariosDTO;
-        public List<UsuarioDTO> Get()
+        public List<UsuarioDTO> GetAll()
         {
             usuariosDTO = new List<UsuarioDTO>();
             using (var connection = new SqlConnection(conectionString))
@@ -29,11 +29,12 @@ namespace PruebaLogin.DAO
                             usuarioDTO.Usuario = reader["Usuario"].ToString();
                             usuarioDTO.Password = reader["Password"].ToString();
                             usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
-
                             usuariosDTO.Add(usuarioDTO);
                         }
+                        reader.Close();
                     }
                 }
+                //NOTA: El USING se encarga se cerrar automaticamente la conexión.
             }
             return usuariosDTO;
         }
@@ -55,9 +56,7 @@ namespace PruebaLogin.DAO
                         usuarioDTO.Usuario = reader["Usuario"].ToString();
                         usuarioDTO.Password = reader["Password"].ToString();
                         usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
-
-                    }
-                    connection.Close();
+                    }                   
                 }
                 return usuarioDTO;
             }
@@ -66,15 +65,14 @@ namespace PruebaLogin.DAO
         public void Create(UsuarioDTO usuarioDTO) {
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
-                connection.Open();
+                
                 string sql = "Insert into Usuario(Usuario, Password, [PasswordHash]) values (@Usuario, @Password, EncryptByPassPhrase('RS', @PasswordHash))";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
                 oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
-
-                oCmd.ExecuteNonQuery();
-                connection.Close();
+                connection.Open();
+                oCmd.ExecuteNonQuery();              
             }
         }
 
@@ -97,7 +95,7 @@ namespace PruebaLogin.DAO
                         usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
                         usuarioDTO.Password = reader["Password"].ToString();
                     }
-                    connection.Close();
+                    reader.Close();                 
                 }
                 return usuarioDTO;
 
@@ -114,8 +112,7 @@ namespace PruebaLogin.DAO
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
                 oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
-                oCmd.ExecuteNonQuery();
-                connection.Close();
+                oCmd.ExecuteNonQuery();                
             }
         }
 
@@ -137,7 +134,7 @@ namespace PruebaLogin.DAO
                         usuarioDTO.Password = reader["Password"].ToString();
                         usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
                     }
-                    connection.Close();
+                    reader.Close();                                
                 }
             }
             return usuarioDTO;
@@ -152,8 +149,7 @@ namespace PruebaLogin.DAO
                 string sql = "Delete from Usuario where ID=@ID";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
-                oCmd.ExecuteNonQuery();
-                connection.Close();
+                oCmd.ExecuteNonQuery();                
             }
         }
     }
