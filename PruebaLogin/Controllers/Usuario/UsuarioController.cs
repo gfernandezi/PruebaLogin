@@ -19,6 +19,7 @@ namespace PruebaLogin.Controllers.Usuario
             try
             {
                 usuarioDAO = new UsuarioDAO();
+                ModelState.Clear();
                 usuariosDTO = usuarioDAO.GetAll();
                 return View(usuariosDTO);
             }
@@ -33,7 +34,7 @@ namespace PruebaLogin.Controllers.Usuario
         {
             usuarioDAO = new UsuarioDAO();
             usuarioDTO = new UsuarioDTO();
-
+            ModelState.Clear();
             usuarioDTO = usuarioDAO.Get(ID);
             return View(usuarioDTO);
         }
@@ -41,9 +42,6 @@ namespace PruebaLogin.Controllers.Usuario
         // GET: Usuario/Create
         public ActionResult Create()
         {
-          
-            
-
             return View();
         }
 
@@ -54,8 +52,16 @@ namespace PruebaLogin.Controllers.Usuario
             try
             {
                 usuarioDAO = new UsuarioDAO();
-                usuarioDAO.Create(usuarioDTO);
-                return RedirectToAction("Index");
+                ModelState.Clear();
+                if (ModelState.IsValid)
+                {
+                    var rowsAffected = usuarioDAO.Create(usuarioDTO);
+                    if (rowsAffected>0){
+                        ViewBag.mensaje = "Usario creado satisfactoriamente.";
+                        return RedirectToAction("Index");
+                    }                   
+                }
+                return View();
             }
             catch (Exception e)
             {
@@ -68,7 +74,9 @@ namespace PruebaLogin.Controllers.Usuario
         {
             usuarioDAO = new UsuarioDAO();
             usuarioDTO = new UsuarioDTO();
-            usuarioDTO = usuarioDAO.Edit(ID);
+            ModelState.Clear();
+            //usuarioDTO = usuarioDAO.Edit(ID);
+            usuarioDTO = usuarioDAO.GetAll().Find(t => t.ID == ID);
             return View(usuarioDTO);
         }
 
@@ -79,8 +87,14 @@ namespace PruebaLogin.Controllers.Usuario
             try
             {
                 usuarioDAO = new UsuarioDAO();
-                usuarioDAO.Edit(ID, usuarioDTO);
-                return RedirectToAction("Index");
+                ModelState.Clear();
+                var rowsAffected = usuarioDAO.Edit(ID, usuarioDTO);              
+                if (rowsAffected > 0){
+                    return RedirectToAction("Index");
+                }
+                else{
+                    return View();
+                }
             }
             catch (Exception e)
             {
@@ -93,6 +107,7 @@ namespace PruebaLogin.Controllers.Usuario
         {
             usuarioDAO = new UsuarioDAO();
             usuarioDTO = new UsuarioDTO();
+            ModelState.Clear();         
             usuarioDTO = usuarioDAO.Delete(ID);
             return View(usuarioDTO);
         }
@@ -100,14 +115,18 @@ namespace PruebaLogin.Controllers.Usuario
         // POST: Usuario/Delete/5
         [HttpPost]
         public ActionResult Delete(int? ID)
-        {
+        {            
             try
-            {
-                // TODO: Add delete logic here
+            {                
                 usuarioDAO = new UsuarioDAO();
-                usuarioDAO.Delete(ID);
-
-                return RedirectToAction("Index");
+                ModelState.Clear();
+                if (usuarioDAO.Delete(ID)==1){
+                    ViewBag.Mensaje = "Registro eliminado.";
+                    return RedirectToAction("Index");
+                }
+                else{
+                    return View();
+                }
             }
             catch (Exception e)
             {

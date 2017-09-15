@@ -15,9 +15,9 @@ namespace PruebaLogin.DAO
         {
             usuariosDTO = new List<UsuarioDTO>();
             using (var connection = new SqlConnection(conectionString))
-            {
-                connection.Open();
+            {                
                 string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario";
+                connection.Open();
                 using (var command = new SqlCommand(sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -43,9 +43,9 @@ namespace PruebaLogin.DAO
         {
             usuarioDTO = new UsuarioDTO();
             using (var connection = new SqlConnection(conectionString))
-            {
-                connection.Open();
+            {                
                 string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario WHERE ID=@ID";
+                connection.Open();
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
                 using (SqlDataReader reader = oCmd.ExecuteReader())
@@ -56,53 +56,56 @@ namespace PruebaLogin.DAO
                         usuarioDTO.Usuario = reader["Usuario"].ToString();
                         usuarioDTO.Password = reader["Password"].ToString();
                         usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
-                    }                   
+                    }
+
                 }
                 return usuarioDTO;
             }
         }
 
-        public void Create(UsuarioDTO usuarioDTO) {
+        public int Create(UsuarioDTO usuarioDTO)
+        {
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
-                
                 string sql = "Insert into Usuario(Usuario, Password, [PasswordHash]) values (@Usuario, @Password, EncryptByPassPhrase('RS', @PasswordHash))";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
                 oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
                 connection.Open();
-                oCmd.ExecuteNonQuery();              
+                var rowsAffected = oCmd.ExecuteNonQuery();
+                return rowsAffected;
             }
         }
 
-        public UsuarioDTO Edit(int ID)
+        //public UsuarioDTO Edit(int ID)
+        //{
+
+        //    UsuarioDTO usuarioDTO = new UsuarioDTO();
+        //    using (SqlConnection connection = new SqlConnection(conectionString))
+        //    {
+        //        connection.Open();
+        //        string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario where ID = @ID";
+        //        SqlCommand oCmd = new SqlCommand(sql, connection);
+        //        oCmd.Parameters.AddWithValue("@ID", ID);
+        //        using (SqlDataReader reader = oCmd.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                usuarioDTO.ID = Convert.ToInt32(reader["ID"]);
+        //                usuarioDTO.Usuario = reader["Usuario"].ToString();
+        //                usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
+        //                usuarioDTO.Password = reader["Password"].ToString();
+        //            }
+        //            reader.Close();                 
+        //        }
+        //        return usuarioDTO;
+
+        //    }
+        //}
+
+        public int Edit(int? ID, UsuarioDTO usuarioDTO)
         {
-
-            UsuarioDTO usuarioDTO = new UsuarioDTO();
-            using (SqlConnection connection = new SqlConnection(conectionString))
-            {
-                connection.Open();
-                string sql = "Select ID, Usuario, Password, CONVERT(VARCHAR(100),DECRYPTBYPASSPHRASE('RS',PasswordHash)) as PasswordHash  from Usuario where ID = @ID";
-                SqlCommand oCmd = new SqlCommand(sql, connection);
-                oCmd.Parameters.AddWithValue("@ID", ID);
-                using (SqlDataReader reader = oCmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        usuarioDTO.ID = Convert.ToInt32(reader["ID"]);
-                        usuarioDTO.Usuario = reader["Usuario"].ToString();
-                        usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
-                        usuarioDTO.Password = reader["Password"].ToString();
-                    }
-                    reader.Close();                 
-                }
-                return usuarioDTO;
-
-            }
-        }
-
-        public void Edit(int? ID, UsuarioDTO usuarioDTO) {
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
@@ -112,7 +115,8 @@ namespace PruebaLogin.DAO
                 oCmd.Parameters.AddWithValue("@Usuario", usuarioDTO.Usuario);
                 oCmd.Parameters.AddWithValue("@Password", usuarioDTO.Password);
                 oCmd.Parameters.AddWithValue("@PasswordHash", usuarioDTO.PasswordHash);
-                oCmd.ExecuteNonQuery();                
+                var rowsAffected = oCmd.ExecuteNonQuery();
+                return rowsAffected;
             }
         }
 
@@ -134,23 +138,25 @@ namespace PruebaLogin.DAO
                         usuarioDTO.Password = reader["Password"].ToString();
                         usuarioDTO.PasswordHash = reader["PasswordHash"].ToString();
                     }
-                    reader.Close();                                
+                    reader.Close();
                 }
             }
             return usuarioDTO;
         }
 
-        public void Delete(int? ID) {
+        public int Delete(int? ID)
+        {
             usuarioDTO = new UsuarioDTO();
-          
+            var rowAffected = 0;
             using (SqlConnection connection = new SqlConnection(conectionString))
             {
                 connection.Open();
                 string sql = "Delete from Usuario where ID=@ID";
                 SqlCommand oCmd = new SqlCommand(sql, connection);
                 oCmd.Parameters.AddWithValue("@ID", ID);
-                oCmd.ExecuteNonQuery();                
+                rowAffected = oCmd.ExecuteNonQuery();
             }
+            return rowAffected;
         }
     }
 }
