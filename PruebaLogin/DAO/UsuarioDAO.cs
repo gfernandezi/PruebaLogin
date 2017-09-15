@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 namespace PruebaLogin.DAO
 {
     public class UsuarioDAO
-    {
+    { 
         string conectionString = ConfigurationManager.ConnectionStrings["DBCuenta"].ConnectionString;
         UsuarioDTO usuarioDTO;
         List<UsuarioDTO> usuariosDTO;
